@@ -11,8 +11,9 @@ const showUser = (req, res) => {
   //find the entry associated with the id used 
   let user = users.find(person => person.id === id)
 
-  if(!user){
-    res.status(!200).send('something is not quite right about this request')
+  //error for 404, should we add code for each? 
+  if(!user) {
+    return res.status(404).json({ msg: 'something went wrong'})
   }
   //need to write some error handling for id's not included in the list
 }
@@ -56,13 +57,11 @@ const createUsers = (req, res) => {
 }
 
 if(!createEntry.name || !createEntry.username || !createEntry.email) {
-  return res.status(404).json({ msg: 'something went wrong'})
-}
-//add the info the your doc
+  res.json({msg: 'you must include the name, username and email and minimum.'})
 users.push(createEntry)
 
 //the end of the whole object 
-return res.json(users)
+res.json(users)
  }
 
  //PUT
@@ -79,6 +78,7 @@ const updateUser = (req, res) => {
   }
 
   //~~~ nodemon currently crashing here. 
+  const updateEntry = () => {
   user.id = update.id || users.id,
   user.name = update.name || users.name,
   user.username = update.username || users.username,
@@ -106,6 +106,13 @@ user.company = {
    bs = update.bs || users.bs,
     //need to write some kind of logic to look through all the keys and write a function to have a ternary operator to replace the key 
   }
+  }
+
+  //update the information and add it to your user file
+users.push(updateEntry())
+
+//out the whole document  
+res.json(users)
 //   //error handling 
 }
 
