@@ -1,5 +1,6 @@
 const users = require('../data/index')
 const { find } = require('../data/index')
+const { response } = require('express')
 
 // GET
 const listUsers = (req, res) => res.json(users)
@@ -8,16 +9,13 @@ const showUser = (req, res) => {
   let id = parseInt(req.params.id)
 
   //find the entry associated with the id used 
-  let finder = users.find(person => { 
-    if(person.id === id) 
-    {return res.json(person)}})
+  let user = users.find(person => person.id === id)
 
-  if(finder === false){
+  if(!user){
     res.status(!200).send('something is not quite right about this request')
   }
   //need to write some error handling for id's not included in the list
 }
-
 
 //POST
 const createUsers = (req, res) => {
@@ -65,7 +63,6 @@ users.push(createEntry)
 
 //the end of the whole object 
 return res.json(users)
-
  }
 
  //PUT
@@ -73,42 +70,43 @@ const updateUser = (req, res) => {
   let id = parseInt(req.params.id)
 
   //find the entry associated with the id used 
-  let finder = users.find(person => { 
-    if(person.id === id) 
-    {return res.json(person)}})
+  let user = users.find(person => person.id === id)
 
   const update = req.body
 
-//   if(finder) {
-//   finder.id = update.id ? update.id : users.id,
-//   finder.name = update.name ? update.name : users.name,
-//   finder.username = update.username ? update.username : users.username,
-//   finder.email = update.email ? update.email : users.email,
-// //first nested
-//  finder.address = {
-//     street = update.address.street ? update.address.street : users.address.street,
-//     suite = update.address.suite ? update.address.suite : users.address.suite,
-//     city = update.address.city ? update.address.city : users.address.city,
-//     zipcode = update.address.zipcode ? update.address.zipcode : users.address.zipcode,
-// //address nested 
-//    geo = {
-//      lat =  update.address.geo.lat ? update.address.geo.lat : users.address.geo.lat,
-//      lng = update.address.geo.lng ? update.address.geo.lng: users.address.geo.lng,
-//    }
-// // in end of the address nested object 
-//  },
-// //second next
-// finder.phone = update.phone ? update.phone : users.phone,
-// finder.website = update.website ? update.website : users.website
-// //nested in the main
-// find.company = {
-//    name = update.name ? update.name : users.name,
-//    catchPhrase = update.catchPhrase ? update.catchPhrase : users.catchPhrase,
-//    bs = update.bs ? update.bs : users.bs,
-//     //need to write some kind of logic to look through all the keys and write a function to have a ternary operator to replace the key 
-//   }
+  if(!user){
+    res.status(404).json({msg: 'user is undefined, please try again'})
+  }
+
+  //~~~ nodemon currently crashing here. 
+  user.id = update.id || users.id,
+  user.name = update.name || users.name,
+  user.username = update.username || users.username,
+  user.email = update.email || users.email,
+//first nested
+ user.address = {
+    street = update.address.street || users.address.street,
+    suite = update.address.suite ||users.address.suite,
+    city = update.address.city || users.address.city,
+    zipcode = update.address.zipcode || users.address.zipcode,
+//address nested 
+   geo = {
+     lat =  update.address.geo.lat || users.address.geo.lat,
+     lng = update.address.geo.lng || users.address.geo.lng,
+   }
+// in end of the address nested object 
+ },
+//second next
+user.phone = update.phone || users.phone,
+user.website = update.website || users.website
+//nested in the main
+user.company = {
+   name = update.name || users.name,
+   catchPhrase = update.catchPhrase || users.catchPhrase,
+   bs = update.bs || users.bs,
+    //need to write some kind of logic to look through all the keys and write a function to have a ternary operator to replace the key 
+  }
 //   //error handling 
-//  }
 }
 
 //DELETE
@@ -116,15 +114,13 @@ const deleteUser = (req, res) => {
   let id = parseInt(req.params.id)
 
   //find the entry associated with the id used 
-  let finder = users.find(person => { 
-    if(person.id === id) 
-    {return res.json(person)}})
+  let user = users.find(person => person.id === id)
 
-  if (finder) {
-    finder.isActive = false; 
-    res.send('deleted')
+  if(!user){
+    res.status(404).json({msg: 'user is undefined, please try again'})
   }
-
+  isActive = false; 
+  res.send('deleted')
   //
 }
 
