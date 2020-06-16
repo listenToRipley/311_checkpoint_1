@@ -8,13 +8,11 @@ const showUser = (req, res) => {
   let id = parseInt(req.params.id)
 
   //find the entry associated with the id used 
-  let finder = (doc, num) => {
-    let entry = doc.find(person => {
-      return person.id === num
-    })
-    return res.json(entry)
-  }
-  if(finder(users, id) === false){
+  let finder = users.find(person => { 
+    if(person.id === id) 
+    {return res.json(person)}})
+
+  if(finder === false){
     res.status(!200).send('something is not quite right about this request')
   }
   //need to write some error handling for id's not included in the list
@@ -75,45 +73,42 @@ const updateUser = (req, res) => {
   let id = parseInt(req.params.id)
 
   //find the entry associated with the id used 
-  let finder = (doc, num) => {
-    let entry = doc.find(person => {
-      return person.id === num
-    })
-    return res.json(entry)
-  }
+  let finder = users.find(person => { 
+    if(person.id === id) 
+    {return res.json(person)}})
 
   const update = req.body
 
-  if(finder(users, id) === true) {
-  finder.id = update.id ? update.id : users.id,
-  finder.name = update.name ? update.name : users.name,
-  finder.username = update.username ? update.username : users.username,
-  finder.email = update.email ? update.email : users.email,
-//first nested
- finder.address = {
-    street = update.address.street ? update.address.street : users.address.street,
-    suite = update.address.suite ? update.address.suite : users.address.suite,
-    city = update.address.city ? update.address.city : users.address.city,
-    zipcode = update.address.zipcode ? update.address.zipcode : users.address.zipcode,
-//address nested 
-   geo = {
-     lat =  update.address.geo.lat ? update.address.geo.lat : users.address.geo.lat,
-     lng = update.address.geo.lng ? update.address.geo.lng: users.address.geo.lng,
-   }
-// in end of the address nested object 
- },
-//second next
-finder.phone = update.phone ? update.phone : users.phone,
-finder.website = update.website ? update.website : users.website
-//nested in the main
-find.company = {
-   name = update.name ? update.name : users.name,
-   catchPhrase = update.catchPhrase ? update.catchPhrase : users.catchPhrase,
-   bs = update.bs ? update.bs : users.bs,
-    //need to write some kind of logic to look through all the keys and write a function to have a ternary operator to replace the key 
-  }
-  //error handling 
- }
+//   if(finder) {
+//   finder.id = update.id ? update.id : users.id,
+//   finder.name = update.name ? update.name : users.name,
+//   finder.username = update.username ? update.username : users.username,
+//   finder.email = update.email ? update.email : users.email,
+// //first nested
+//  finder.address = {
+//     street = update.address.street ? update.address.street : users.address.street,
+//     suite = update.address.suite ? update.address.suite : users.address.suite,
+//     city = update.address.city ? update.address.city : users.address.city,
+//     zipcode = update.address.zipcode ? update.address.zipcode : users.address.zipcode,
+// //address nested 
+//    geo = {
+//      lat =  update.address.geo.lat ? update.address.geo.lat : users.address.geo.lat,
+//      lng = update.address.geo.lng ? update.address.geo.lng: users.address.geo.lng,
+//    }
+// // in end of the address nested object 
+//  },
+// //second next
+// finder.phone = update.phone ? update.phone : users.phone,
+// finder.website = update.website ? update.website : users.website
+// //nested in the main
+// find.company = {
+//    name = update.name ? update.name : users.name,
+//    catchPhrase = update.catchPhrase ? update.catchPhrase : users.catchPhrase,
+//    bs = update.bs ? update.bs : users.bs,
+//     //need to write some kind of logic to look through all the keys and write a function to have a ternary operator to replace the key 
+//   }
+//   //error handling 
+//  }
 }
 
 //DELETE
@@ -121,19 +116,17 @@ const deleteUser = (req, res) => {
   let id = parseInt(req.params.id)
 
   //find the entry associated with the id used 
-  let finder = (doc, num) => {
-    let entry = doc.find(person => {
-      return person.id === num
-    })
-    return res.json(entry)
-  }
+  let finder = users.find(person => { 
+    if(person.id === id) 
+    {return res.json(person)}})
 
-  if (finder(users, id) === true) {
+  if (finder) {
+    finder.isActive = false; 
     res.send('deleted')
   }
 
-  //need to have error 
- }
+  //
+}
 
 module.exports = {
   listUsers,
