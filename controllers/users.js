@@ -1,4 +1,4 @@
-const users = require('../data/index')
+const { users } = require('../data/index')
 const { find } = require('../data/index')
 const { response } = require('express')
 
@@ -63,6 +63,7 @@ users.push(createEntry)
 //the end of the whole object 
 res.json(users)
  }
+}
 
  //PUT
 const updateUser = (req, res) => {
@@ -71,45 +72,48 @@ const updateUser = (req, res) => {
   //find the entry associated with the id used 
   let user = users.find(person => person.id === id)
 
-  const update = req.body
-
   if(!user){
     res.status(404).json({msg: 'user is undefined, please try again'})
   }
 
-  //~~~ nodemon currently crashing here. 
-  const updateEntry = () => {
-  user.id = update.id || users.id,
-  user.name = update.name || users.name,
-  user.username = update.username || users.username,
-  user.email = update.email || users.email,
+if (user) {
+
+  const update = req.body
+
+  const {id, name, username, email, address, phone, website, company} = user
+  const {street, suite, city, zipcode, geo} = address
+  const {lat, lng} = geo
+  //give the company name an alias so it doesn't get confused with the name in the first part of the body.
+  const {name: cName, catchPhrase, bs} = company
+
+  id = update.id || id,
+  name = update.name || name,
+  username = update.username || username,
+  email = update.email || email,
 //first nested
- user.address = {
-    street = update.address.street || users.address.street,
-    suite = update.address.suite ||users.address.suite,
-    city = update.address.city || users.address.city,
-    zipcode = update.address.zipcode || users.address.zipcode,
+ address = {
+    street = update.street || street,
+    suite = update.suite || suite,
+    city = update.city || city,
+    zipcode = update.zipcode || zipcode,
 //address nested 
    geo = {
-     lat =  update.address.geo.lat || users.address.geo.lat,
-     lng = update.address.geo.lng || users.address.geo.lng,
+     lat =  update.lat || lat,
+     lng = update.lng || lng,
    }
 // in end of the address nested object 
  },
 //second next
-user.phone = update.phone || users.phone,
-user.website = update.website || users.website
+phone = update.phone || phone,
+website = update.website || website
 //nested in the main
-user.company = {
-   name = update.name || users.name,
-   catchPhrase = update.catchPhrase || users.catchPhrase,
-   bs = update.bs || users.bs,
+company = {
+   name = update.cName || cName,
+   catchPhrase = update.catchPhrase || catchPhrase,
+   bs = update.bs || bs,
     //need to write some kind of logic to look through all the keys and write a function to have a ternary operator to replace the key 
   }
-  }
-
-  //update the information and add it to your user file
-users.push(updateEntry())
+}
 
 //out the whole document  
 res.json(users)
@@ -128,7 +132,6 @@ const deleteUser = (req, res) => {
   }
   isActive = false; 
   res.send('deleted')
-  //
 }
 
 module.exports = {
