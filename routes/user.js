@@ -8,7 +8,6 @@ router.get('/users', controller.listUsers)
 
 router.get('/users/:id', controller.showUser)
 
-
 //POST
 router.post('/users', controller.createUsers)
 
